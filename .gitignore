@@ -131,3 +131,5 @@ dmypy.json
 # Added by Patrick
 .vscode/
 .DS_Store
+data/
+models/
