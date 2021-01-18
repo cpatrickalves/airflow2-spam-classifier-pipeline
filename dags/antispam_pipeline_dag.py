@@ -6,7 +6,8 @@ from airflow.decorators import dag, task
 import logging as logger
 from spam import NaiveBayesSolver
 import requests, zipfile
-import os, sys
+import os, sys, psutil
+
 
 # These args will get passed on to each operator
 default_args = {
@@ -20,18 +21,31 @@ default_args = {
     'sla': timedelta(minutes=15)
 }
 
+def checkIfProcessRunning(processName):
+    '''
+    Check if there is any running process that contains the given name processName.
+    '''
+    #Iterate over the all the running process
+    for proc in psutil.process_iter():
+        try:
+            # Check if process name contains the given name string.
+            if processName.lower() in proc.name().lower():
+                return True
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+    return False;
+
 
 @dag(default_args=default_args, schedule_interval=None, start_date=days_ago(2))
 def antispam_ml_pipeline():
     """
     ### A Machine Learning pipeline to train an antispam model
-    ADD SOMETHING LATER
     """
 
     @task()
     def download_training_set(file_url, ts_name):
         """
-        Some description
+        Download the training set as a ZIP file from some URL
         """
 
         tmpfile = "downloads/tmp.zip"
@@ -84,17 +98,31 @@ def antispam_ml_pipeline():
         nb.predict(os.path.join(dataset_path, "test"), model_file)
         return model_name
 
+    # Deploy the demo app (Streamlit app)
+    # The above Operator works, but it will lock the shell while the
+    # Streamlit app is running, so the task will neve end.
+    #deploy = BashOperator(
+    #    task_id='deploy_app',
+    #    bash_command="streamlit run /airflow/dags/spam/demo_app.py --server.port 80 &",
+    #    sla= timedelta(seconds=5)
+    #)
+
     @task()
-    def deploy_app(model_path):
+    def deploy_app(model_path:str):
         """
-        Deploy Streamlit app
+        Deploy a demo of the spam classifier as a Streamlit app
         """
         logger.info("Deploying model in SpamTest app ...")
-
+        if checkIfProcessRunning('streamlit'):
+            logger.info("Streamlit app already running")
+        else:
+            logger.info("Starting streamlit app ...")
+             # Run this from python to avoid locking the shell
+            os.system("streamlit run /airflow/dags/spam/demo_app.py --server.port 80 &")
 
     # TS URL
     file_url = "https://github.com/cpatrickalves/airflow2-spam-classifier-pipeline/files/5814551/TS-2021003-124601.zip"
-    ts_name = "TS-2021003-124601"
+    ts_name = "TS-2021003-124601"  # TS-YYYYMMDD-HHMMSS
 
     # Run the pipeline
     dataset_path = download_training_set(file_url, ts_name)
