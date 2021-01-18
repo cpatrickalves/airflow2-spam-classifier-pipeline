@@ -30,7 +30,4 @@ COPY dags/ ./dags
 #COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 EXPOSE 8080 5555 8793
 
-CMD ["./entrypoint.sh"]
-#ENTRYPOINT ["./entrypoint.sh"]
-#CMD ["webserver"]
-#ENTRYPOINT ["airflow", "scheduler", "&", "airflow", "webserver", "--port", "8080"]
+CMD ["./scripts/entrypoint.sh"]
