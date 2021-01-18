@@ -201,6 +201,46 @@ class NaiveBayesSolver:
                 logger.info("Accuracy: %.2f " % (float(correct_predictions) / total_test_cases))
 
 
+    def predict_from_text(self, text:str, model_file:str, strategy:int = 1):
+        """Compute probability for each class
+
+        Args:
+            text (str): text to evaluate
+            model_file (str): model path
+            strategy (int, optional): 1 to work with the presence of words and 2 to the frequency of works. Defaults to 1.
+
+        Returns:
+            dict: probabilities for each class
+        """
+        status = self.load_model_from_file(model_file)
+        if status:
+            logger.info("Making predictions with the presence of words in the model ...")
+            words = set(text.split())
+            max_prob = -sys.maxsize
+            max_class = None
+            for output_class in ('spam', 'notspam'):
+                if strategy == 1:
+                    p = self.get_class_prob(output_class)
+                    for word in words:
+                        p = p + self.get_word_presence_class_log_prob(word, output_class)
+                    if p > max_prob:
+                        max_prob = p
+                        max_class = output_class
+                else:
+                    p = self.get_class_prob(output_class)
+                    for word in words:
+                        p = p + self.get_word_frequency_class_log_prob(word, output_class)
+                    if p > max_prob:
+                        max_prob = p
+                        max_class = output_class
+
+            result =  {max_class: round((1 - np.exp(max_prob)), 2) * 100}
+            logger.info(f"Prediction: {result}")
+            return result
+        else:
+            pass
+
+
 if __name__ == "__main__":
     nb = NaiveBayesSolver()
 
