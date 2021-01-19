@@ -30,4 +30,4 @@ COPY dags/ ./dags
 #COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 EXPOSE 8080 5555 8793
 
-CMD ["./scripts/entrypoint.sh"]
+CMD ["./entrypoint.sh"]
