@@ -69,7 +69,14 @@ Now, follow these steps:
 
 You can try a version of the Spam Classifier:
 
-<img width="200" alt="image" src="https://user-images.githubusercontent.com/22003608/105057429-fa1e3080-5a53-11eb-8fcb-16aa9cae5b60.png" href="https://share.streamlit.io/cpatrickalves/airflow2-spam-classifier-pipeline/main/dags/spam/demo_app.py">
+<p>
+<a href="https://share.streamlit.io/cpatrickalves/airflow2-spam-classifier-pipeline/main/dags/spam/demo_app.py">
+<img width="200" alt="image" src="https://user-images.githubusercontent.com/22003608/105057429-fa1e3080-5a53-11eb-8fcb-16aa9cae5b60.png">
+</a>
+</p>
+
+
+
 
 
 ## The Spam Classifier model
