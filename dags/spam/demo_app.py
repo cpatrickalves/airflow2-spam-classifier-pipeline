@@ -11,7 +11,7 @@ hide_streamlit_style = """
     """
 
 spam_model = NaiveBayesSolver()
-model_path = "models/model.txt"
+model_path = "models/testmodel"
 
 def main():
 
@@ -30,9 +30,11 @@ def main():
                 result = spam_model.predict_from_text(text, model_path)
 
                 if "notspam" in result:
-                    st.success(f"There is a probability of {result['notspam']}% that this is not a spam")
+                    #st.success(f"There is a probability of {result['notspam']}% that this is not a spam")
+                    st.success("This is not a spam")
                 else:
-                    st.error(f"There is a probability of {result['spam']}% that this is a spam")
+                    #st.error(f"There is a probability of {result['spam']}% that this is a spam")
+                    st.error(f"This is a spam")
 
             except Exception as e:
                     st.write("Error while scraping data.")
