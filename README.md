@@ -67,6 +67,11 @@ Now, follow these steps:
 
 <img width="600" alt="image" src="https://user-images.githubusercontent.com/22003608/104958512-ed93cc80-59ae-11eb-8f4b-09ef3377e11f.png">
 
+You can try a version of the Spam Classifier:
+
+<img width="200" alt="image" src="https://user-images.githubusercontent.com/22003608/105057429-fa1e3080-5a53-11eb-8fcb-16aa9cae5b60.png" href="https://share.streamlit.io/cpatrickalves/airflow2-spam-classifier-pipeline/main/dags/spam/demo_app.py">
+
+
 ## The Spam Classifier model
 
 This is a baseline project to create a Machine Learning Pipeline using Airflow.
