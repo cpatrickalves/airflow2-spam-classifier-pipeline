@@ -86,7 +86,7 @@ def antispam_ml_pipeline():
         return dataset_path
 
     @task()
-    def train_model(dataset_path: str , model_name: str = "test-model"):
+    def train_model(dataset_path: str , model_name: str = "testmodel"):
         """
         Train model
         """
