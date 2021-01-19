@@ -218,23 +218,24 @@ class NaiveBayesSolver:
             words = set(text.split())
             max_prob = -sys.maxsize
             max_class = None
-            for output_class in ('spam', 'notspam'):
-                if strategy == 1:
-                    p = self.get_class_prob(output_class)
-                    for word in words:
-                        p = p + self.get_word_presence_class_log_prob(word, output_class)
-                    if p > max_prob:
-                        max_prob = p
-                        max_class = output_class
-                else:
-                    p = self.get_class_prob(output_class)
-                    for word in words:
-                        p = p + self.get_word_frequency_class_log_prob(word, output_class)
-                    if p > max_prob:
-                        max_prob = p
-                        max_class = output_class
+            probs = {}
 
-            result =  {max_class: round((1 - np.exp(max_prob)), 2) * 100}
+            for output_class in ('spam', 'notspam'):
+                p =  self.get_class_prob(output_class)
+                for word in words:
+                    if strategy == 1:
+                        p = p + self.get_word_presence_class_log_prob(word, output_class)
+                    else:
+                        p = p + self.get_word_frequency_class_log_prob(word, output_class)
+
+                logger.info(f"Class: {output_class} - Prob: {p}")
+                probs[output_class] = p
+
+                if p > max_prob:
+                    max_prob = p
+                    max_class = output_class
+
+            result =  {max_class: round(np.exp(max_prob), 2) * 100} # FIXME: This probability is wrong
             logger.info(f"Prediction: {result}")
             return result
         else:
